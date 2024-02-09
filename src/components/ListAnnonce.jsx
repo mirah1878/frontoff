@@ -7,14 +7,15 @@ const ListAnnonce = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://0801241705-production.up.railway.app/annonce', {
+                const response = await fetch('https://0801241705-production.up.railway.app/annonce/valide', {
                     method: 'GET',
                 });
                 const data = await response.json();
                 if (response.ok) {
                     setAnnonces(data);
-                    console.log("data : "+data);
-                    console.log("set annonce : "+setAnnonces(data));
+                    console.log("data : ", data);
+                    console.log("Annonces mises à jour avec succès !");
+                    
                 } else {
                     alert(data.message);
                 }
@@ -40,23 +41,45 @@ const ListAnnonce = () => {
                     </div>
                 </div>
                 <div className="row row-cols-1 row-cols-md-2 mx-auto" style={{ maxWidth: '900px' }}>
-                    <div className="col mb-4">
-                        <div>
-                                <img className="rounded img-fluid shadow w-100 fit-cover" style={{ height: '250px' }} />
-                            <div className="py-4">
-                                <span className="badge bg-primary mb-2">ajouter favoris</span>
-                                <Link onClick={() => setShowDetail(!showDetail)}>
-                                    <span className="badge bg-primary mb-2">voir detail</span>
-                                </Link>
-                                {showDetail && (
-                                    <>
-                                        <h4 className="fw-bold">Prix</h4>
-                                        <p className="text-muted">Description</p>
-                                    </>
-                                )}
+                    {annonces.map((listAnnonce) => (
+                        <div className="col mb-4" key={listAnnonce.id}>
+                            <div>
+                            {listAnnonce.voiture.photo.map((photo, i) => {
+                                if(i === 0) {
+                                    return (
+                                        <img
+                                            key={i} // La clé est définie ici, en dehors des balises
+                                            className="rounded img-fluid shadow w-100 fit-cover"
+                                            src={photo.encoded}
+                                            style={{ height: '250px' }}
+                                            alt={listAnnonce.voiture.nom}
+                                        />
+                                    );
+                                }
+                                return null;
+                            })}
+                                <div className="py-4">
+                                    <span className="badge bg-primary mb-2">ajouter favoris</span>
+                                    <Link to = "/Message">
+                                    <span className="badge bg-primary mb-2" style={{ marginLeft: '301px' }}>C</span>
+                                    </Link>
+                                    <h4 className="fw-bold">{listAnnonce.voiture.nom}</h4>
+                                    <p>{listAnnonce.voiture.photo.id}</p>
+                                    <h4 className="text-muted">{listAnnonce.prix} Ariary</h4>
+                                    <Link onClick={() => setShowDetail(!showDetail)}>
+                                        <span className="badge bg-primary mb-2">voir detail</span>
+                                    </Link>
+                                    {showDetail && (
+                                        <>
+                                            <p className="text-muted"><b>Marque:</b> {listAnnonce.voiture.marque.nom}</p>
+                                            <p className="text-muted"><b>Categorie:</b>  {listAnnonce.voiture.categorie.nom}</p>
+                                            <p className="text-muted"><b>Model: </b>{listAnnonce.voiture.modele.nom}</p>
+                                        </>
+                                    )}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    ))}
                 </div>
             </div>
         </section>

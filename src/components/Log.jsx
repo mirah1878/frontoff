@@ -2,29 +2,20 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 
-function Login() {
-  const [formData, setFormData] = useState({
-    email: '',
-    motdepasse: '',
-  });
+function Log() {
+  const [email, setEmail] = useState("admin");
+  const [password, setPassword] = useState("123456789");
+  
 
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await Axios.post("https://0801241705-production.up.railway.app/login", {
-        username: formData.email,
-        password: formData.motdepasse,
+        username: email,
+        password: password,
       });
   
       console.log("Full response:", response);
@@ -35,7 +26,6 @@ function Login() {
       sessionStorage.setItem('token', token);
       navigate("/");
     } catch (error) {
-      console.error("Login error", error);
       console.log("Full response:", error.response);
       setError('Identification non valide. Veuillez réessayer.');
     }
@@ -62,10 +52,10 @@ function Login() {
                     </div>
                     <form onSubmit={handleSubmit}>
                     <div className="mb-3">
-                        <input className="form-control" type="texte" name="email" placeholder="Email" value={formData.email} onChange={handleInputChange} />
+                        <input className="form-control" type="texte" name="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
                     </div>
                     <div className="mb-3">
-                        <input className="form-control" type="password" name="motdepasse" placeholder="Password" value={formData.motdepasse} onChange={handleInputChange} />
+                        <input className="form-control" type="password" name="motdepasse" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
                     </div>
                     <div className="mb-3">
                         <button className="btn btn-primary shadow d-block w-100" type="submit">Log in</button>
@@ -83,4 +73,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Log;
